@@ -1,13 +1,13 @@
-import React from 'react';
-import './App.css';
+import "./App.css";
+import { BrowserRouter } from "react-router-dom";
+import Router from "./pages/router";
 
-function App() {
-
+const App = () => {
   return (
-    <>
-      React Masonry Grid
-    </>
-  )
-}
+    <BrowserRouter>
+      <Router />
+    </BrowserRouter>
+  );
+};
 
 export default App;
