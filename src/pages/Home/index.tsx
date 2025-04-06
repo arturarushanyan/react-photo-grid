@@ -1,11 +1,12 @@
-import React from "react";
+import React from 'react';
+import { VirtualizedMasonryGrid } from '../../components/VirtualizedMasonryGrid/VirtualizedMasonryGrid';
+import { GridItem } from '../../types';
 import { usePexelsPhotos } from '../../hooks/usePexelsPhotos';
-import { MasonryGrid } from "../../components/MasonryGrid/MasonryGrid";
-import mockPhotos from '../../mockData/mock-photo-response.json';
-import { GridItem } from "../../types";
 
-const Home = () => {
+const Home: React.FC = () => {
   const { photos, loading, error, loadMore } = usePexelsPhotos();
+
+  // Render a photo item
   const renderItem = (item: GridItem) => (
     <div
       style={{
@@ -26,6 +27,20 @@ const Home = () => {
         }}
         loading="lazy"
       />
+      <div
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          padding: '8px',
+          background: 'linear-gradient(transparent, rgba(0,0,0,0.7))',
+          color: 'white',
+          fontSize: '14px',
+        }}
+      >
+        Photo by {item.photographer}
+      </div>
     </div>
   );
 
@@ -33,20 +48,41 @@ const Home = () => {
     return <div>Error: {error}</div>;
   }
 
-    return (
-      <div>
-        <h1>Masonry grid</h1>
-        <MasonryGrid
+  return (
+    <div
+      style={{
+        width: '100%',
+        minHeight: '100vh',
+      }}
+    >
+      <VirtualizedMasonryGrid
         items={photos}
         columnCount={3}
         columnGap={16}
         rowGap={16}
+        windowHeight={window.innerHeight}
         renderItem={renderItem}
         onLoadMore={loadMore}
         loading={loading}
       />
-      </div>
-    );
-  };
-  
+      {loading && (
+        <div
+          style={{
+            position: 'fixed',
+            bottom: '20px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            padding: '10px 20px',
+            background: 'rgba(0,0,0,0.7)',
+            color: 'white',
+            borderRadius: '20px',
+          }}
+        >
+          Loading more photos...
+        </div>
+      )}
+    </div>
+  );
+};
+
 export default Home;

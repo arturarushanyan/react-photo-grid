@@ -7,8 +7,6 @@ interface MasonryGridProps {
   columnGap: number;
   rowGap: number;
   renderItem: (item: GridItem) => React.ReactNode;
-  onLoadMore?: () => void;
-  loading?: boolean;
 }
 
 export const MasonryGrid: React.FC<MasonryGridProps> = ({
@@ -17,13 +15,11 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
   columnGap,
   rowGap,
   renderItem,
-  onLoadMore,
-  loading = false,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerWidth, setContainerWidth] = useState(0);
-  const observerRef = useRef<IntersectionObserver | null>(null);
 
+  // Update container width on resize
   useEffect(() => {
     const handleResize = () => {
       if (containerRef.current) {
@@ -36,6 +32,7 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Organize items into columns
   const columns = useMemo(() => {
     if (containerWidth === 0) return [];
     
@@ -61,48 +58,6 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
 
     return newColumns;
   }, [items, columnCount, columnGap, rowGap, containerWidth]);
-
-  useEffect(() => {
-    if (!onLoadMore || loading) return;
-
-    const sentinel = document.createElement('div');
-    sentinel.style.height = '1px';
-    sentinel.style.width = '100%';
-    sentinel.style.position = 'absolute';
-    sentinel.style.bottom = '0';
-    
-    if (containerRef.current) {
-      containerRef.current.appendChild(sentinel);
-    }
-
-    observerRef.current = new IntersectionObserver(
-      (entries) => {
-        const [entry] = entries;
-        if (entry.isIntersecting) {
-          console.log('Sentinel is visible, loading more...');
-          onLoadMore();
-        }
-      },
-      {
-        root: null,
-        rootMargin: '100px',
-        threshold: 0.1,
-      }
-    );
-
-    if (sentinel) {
-      observerRef.current.observe(sentinel);
-    }
-
-    return () => {
-      if (observerRef.current) {
-        observerRef.current.disconnect();
-      }
-      if (sentinel && sentinel.parentNode) {
-        sentinel.parentNode.removeChild(sentinel);
-      }
-    };
-  }, [onLoadMore, loading]);
 
   return (
     <div
