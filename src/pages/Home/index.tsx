@@ -1,9 +1,11 @@
 import React from "react";
+import { usePexelsPhotos } from '../../hooks/usePexelsPhotos';
 import { MasonryGrid } from "../../components/MasonryGrid/MasonryGrid";
 import mockPhotos from '../../mockData/mock-photo-response.json';
 import { GridItem } from "../../types";
 
-const Home = () => { 
+const Home = () => {
+  const { photos, loading, error, loadMore } = usePexelsPhotos();
   const renderItem = (item: GridItem) => (
     <div
       style={{
@@ -26,17 +28,22 @@ const Home = () => {
       />
     </div>
   );
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
     return (
       <div>
         <h1>Masonry grid</h1>
         <MasonryGrid
-        items={mockPhotos.photos as any}
+        items={photos}
         columnCount={3}
         columnGap={16}
         rowGap={16}
         renderItem={renderItem}
-        onLoadMore={() => {}}
-        loading={false}
+        onLoadMore={loadMore}
+        loading={loading}
       />
       </div>
     );
