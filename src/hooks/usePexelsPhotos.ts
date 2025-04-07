@@ -1,6 +1,32 @@
 import { useState, useEffect, useRef } from 'react';
-import { fetchPhotos } from '../api/api';
-import { Photo, GridItem } from '../types';
+import { useApi } from './useApi';
+import { GridItem } from '../types';
+
+interface PexelsPhoto {
+  id: number;
+  width: number;
+  height: number;
+  url: string;
+  photographer: string;
+  src: {
+    original: string;
+    large2x: string;
+    large: string;
+    medium: string;
+    small: string;
+    portrait: string;
+    landscape: string;
+    tiny: string;
+  };
+}
+
+interface PexelsResponse {
+  page: number;
+  per_page: number;
+  photos: PexelsPhoto[];
+  total_results: number;
+  next_page?: string;
+}
 
 interface UsePexelsPhotosResult {
   photos: GridItem[];
@@ -10,13 +36,16 @@ interface UsePexelsPhotosResult {
   loadMore: () => void;
 }
 
+const PEXELS_API_KEY = import.meta.env.VITE_PEXELS_API_KEY; // Replace with your actual API key
+const PEXELS_API_URL = 'https://api.pexels.com/v1';
+
 export const usePexelsPhotos = (): UsePexelsPhotosResult => {
   const [photos, setPhotos] = useState<GridItem[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
   const loadingRef = useRef(false);
+  
+  const { fetchData, loading: apiLoading, error: apiError } = useApi<PexelsResponse>();
 
   // Load photos for a specific page
   const loadPhotosForPage = async (pageNum: number) => {
@@ -26,11 +55,15 @@ export const usePexelsPhotos = (): UsePexelsPhotosResult => {
     }
     
     try {
-      setLoading(true);
       loadingRef.current = true;
       console.log(`Loading page ${pageNum}`);
       
-      const response = await fetchPhotos(pageNum);
+      const url = `${PEXELS_API_URL}/curated?page=${pageNum}&per_page=30`;
+      const response = await fetchData(url, {
+        headers: {
+          Authorization: PEXELS_API_KEY,
+        },
+      });
       
       if (response.photos.length === 0) {
         console.log('No more photos available');
@@ -38,7 +71,7 @@ export const usePexelsPhotos = (): UsePexelsPhotosResult => {
         return;
       }
       
-      const newPhotos: GridItem[] = response.photos.map((photo: Photo) => ({
+      const newPhotos: GridItem[] = response.photos.map((photo: PexelsPhoto) => ({
         id: photo.id,
         height: photo.height,
         width: photo.width,
@@ -49,10 +82,8 @@ export const usePexelsPhotos = (): UsePexelsPhotosResult => {
       
       setPhotos((prev) => [...prev, ...newPhotos]);
     } catch (err) {
-      setError('Failed to load photos');
-      console.error(err);
+      console.error('Error loading photos:', err);
     } finally {
-      setLoading(false);
       loadingRef.current = false;
     }
   };
@@ -75,8 +106,8 @@ export const usePexelsPhotos = (): UsePexelsPhotosResult => {
 
   return {
     photos,
-    loading,
-    error,
+    loading: apiLoading || loadingRef.current,
+    error: apiError,
     hasMore,
     loadMore,
   };
