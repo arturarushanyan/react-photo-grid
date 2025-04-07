@@ -1,4 +1,3 @@
-// Configuration type definitions
 interface PexelsConfig {
   apiKey: string;
   baseUrl: string;
@@ -20,7 +19,6 @@ interface AppConfig {
   grid: GridConfig;
 }
 
-// Validate environment variables
 function validateEnvVariables(): void {
   if (!import.meta.env.VITE_PEXELS_API_KEY) {
     throw new Error('VITE_PEXELS_API_KEY is required');
@@ -31,7 +29,6 @@ function validateEnvVariables(): void {
   }
 }
 
-// Initialize configuration
 function initializeConfig(): AppConfig {
   validateEnvVariables();
 

@@ -14,11 +14,9 @@ export const VirtualizedGrid: React.FC<VirtualizedGridProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
 
-  // Set up intersection observer for infinite scroll
   useEffect(() => {
     if (!onLoadMore || loading) return;
 
-    // Create a sentinel element at the bottom of the grid
     const sentinel = document.createElement('div');
     sentinel.style.height = '1px';
     sentinel.style.width = '100%';
@@ -29,12 +27,10 @@ export const VirtualizedGrid: React.FC<VirtualizedGridProps> = ({
       containerRef.current.appendChild(sentinel);
     }
 
-    // Create intersection observer
     observerRef.current = new IntersectionObserver(
       (entries) => {
         const [entry] = entries;
         if (entry.isIntersecting) {
-          console.log('Sentinel is visible, loading more...');
           onLoadMore();
         }
       },
@@ -45,7 +41,6 @@ export const VirtualizedGrid: React.FC<VirtualizedGridProps> = ({
       }
     );
 
-    // Start observing the sentinel
     if (sentinel) {
       observerRef.current.observe(sentinel);
     }

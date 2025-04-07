@@ -18,7 +18,6 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerWidth, setContainerWidth] = useState(0);
 
-  // Update container width on resize
   useEffect(() => {
     const handleResize = () => {
       if (containerRef.current) {
@@ -31,7 +30,6 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Organize items into columns
   const columns = useMemo(() => {
     if (containerWidth === 0) return [];
     

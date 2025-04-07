@@ -47,13 +47,11 @@ export const usePexelsPhotos = (): UsePexelsPhotosResult => {
 
   const loadPhotosForPage = async (pageNum: number) => {
     if (loadingRef.current || !hasMore) {
-      console.log('Skipping load - loading:', loadingRef.current, 'hasMore:', hasMore);
       return;
     }
     
     try {
       loadingRef.current = true;
-      console.log(`Loading page ${pageNum}`);
       
       const url = `${config.api.pexels.baseUrl}${config.api.pexels.endpoints.curated}?page=${pageNum}&per_page=${config.grid.defaultPageSize}`;
       const response = await fetchData(url, {
@@ -63,7 +61,6 @@ export const usePexelsPhotos = (): UsePexelsPhotosResult => {
       });
       
       if (response.photos.length === 0) {
-        console.log('No more photos available');
         setHasMore(false);
         return;
       }
@@ -85,12 +82,10 @@ export const usePexelsPhotos = (): UsePexelsPhotosResult => {
     }
   };
 
-  // Load initial photos
   useEffect(() => {
     loadPhotosForPage(1);
   }, []);
 
-  // Handle load more request
   const loadMore = () => {
     if (!loadingRef.current && hasMore) {
       const nextPage = page + 1;
