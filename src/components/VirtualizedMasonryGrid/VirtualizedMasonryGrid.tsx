@@ -9,23 +9,28 @@ interface VirtualizedMasonryGridProps {
   columnGap: number;
   rowGap: number;
   windowHeight: number;
-  renderItem: (item: GridItem) => React.ReactNode;
   onLoadMore?: () => void;
   loading?: boolean;
 }
 
-export const VirtualizedMasonryGrid: React.FC<VirtualizedMasonryGridProps> = (props) => {
+export const VirtualizedMasonryGrid: React.FC<VirtualizedMasonryGridProps> = ({
+  loading,
+  items,
+  columnCount,
+  columnGap,
+  rowGap,
+  onLoadMore,
+}) => {
   return (
     <VirtualizedGrid
-      onLoadMore={props.onLoadMore}
-      loading={props.loading}
+      onLoadMore={onLoadMore}
+      loading={loading}
     >
       <MasonryGrid
-        items={props.items}
-        columnCount={props.columnCount}
-        columnGap={props.columnGap}
-        rowGap={props.rowGap}
-        renderItem={props.renderItem}
+        items={items}
+        columnCount={columnCount}
+        columnGap={columnGap}
+        rowGap={rowGap}
       />
     </VirtualizedGrid>
   );

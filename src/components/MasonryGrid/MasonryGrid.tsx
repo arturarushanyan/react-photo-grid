@@ -1,12 +1,12 @@
 import React, { useMemo, useRef, useState, useEffect } from 'react';
 import { GridItem, Column } from '../../types';
+import MasonryItem from '../MasonryItem/MasonryItem';
 
 interface MasonryGridProps {
   items: GridItem[];
   columnCount: number;
   columnGap: number;
   rowGap: number;
-  renderItem: (item: GridItem) => React.ReactNode;
 }
 
 export const MasonryGrid: React.FC<MasonryGridProps> = ({
@@ -14,7 +14,6 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
   columnCount,
   columnGap,
   rowGap,
-  renderItem,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerWidth, setContainerWidth] = useState(0);
@@ -92,7 +91,7 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
                   height: item.height,
                 }}
               >
-                {renderItem(item)}
+                <MasonryItem src={item.src} photographer={item.photographer} />
               </div>
             ))}
           </div>
