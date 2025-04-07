@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useApi } from './useApi';
 import { GridItem } from '../types';
+import { config } from '../config';
 
 interface PexelsPhoto {
   id: number;
@@ -36,9 +37,6 @@ interface UsePexelsPhotosResult {
   loadMore: () => void;
 }
 
-const PEXELS_API_KEY = import.meta.env.VITE_PEXELS_API_KEY; // Replace with your actual API key
-const PEXELS_API_URL = 'https://api.pexels.com/v1';
-
 export const usePexelsPhotos = (): UsePexelsPhotosResult => {
   const [photos, setPhotos] = useState<GridItem[]>([]);
   const [hasMore, setHasMore] = useState(true);
@@ -47,7 +45,6 @@ export const usePexelsPhotos = (): UsePexelsPhotosResult => {
   
   const { fetchData, loading: apiLoading, error: apiError } = useApi<PexelsResponse>();
 
-  // Load photos for a specific page
   const loadPhotosForPage = async (pageNum: number) => {
     if (loadingRef.current || !hasMore) {
       console.log('Skipping load - loading:', loadingRef.current, 'hasMore:', hasMore);
@@ -58,10 +55,10 @@ export const usePexelsPhotos = (): UsePexelsPhotosResult => {
       loadingRef.current = true;
       console.log(`Loading page ${pageNum}`);
       
-      const url = `${PEXELS_API_URL}/curated?page=${pageNum}&per_page=30`;
+      const url = `${config.api.pexels.baseUrl}${config.api.pexels.endpoints.curated}?page=${pageNum}&per_page=${config.grid.defaultPageSize}`;
       const response = await fetchData(url, {
         headers: {
-          Authorization: PEXELS_API_KEY,
+          Authorization: config.api.pexels.apiKey,
         },
       });
       
@@ -95,10 +92,8 @@ export const usePexelsPhotos = (): UsePexelsPhotosResult => {
 
   // Handle load more request
   const loadMore = () => {
-    console.log('loadMore called, current page:', page);
     if (!loadingRef.current && hasMore) {
       const nextPage = page + 1;
-      console.log('Incrementing to page:', nextPage);
       setPage(nextPage);
       loadPhotosForPage(nextPage);
     }
