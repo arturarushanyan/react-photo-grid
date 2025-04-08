@@ -1,4 +1,5 @@
 import React, { useRef, useEffect } from 'react';
+import { Container, Sentinel } from './VirtualizedGrid.styles';
 
 interface VirtualizedGridProps {
   onLoadMore?: () => void;
@@ -18,10 +19,12 @@ export const VirtualizedGrid: React.FC<VirtualizedGridProps> = ({
     if (!onLoadMore || loading) return;
 
     const sentinel = document.createElement('div');
-    sentinel.style.height = '1px';
-    sentinel.style.width = '100%';
-    sentinel.style.position = 'absolute';
-    sentinel.style.bottom = '0';
+    Object.assign(sentinel.style, {
+      height: '1px',
+      width: '100%',
+      position: 'absolute',
+      bottom: '0',
+    });
     
     if (containerRef.current) {
       containerRef.current.appendChild(sentinel);
@@ -56,14 +59,8 @@ export const VirtualizedGrid: React.FC<VirtualizedGridProps> = ({
   }, [onLoadMore, loading]);
 
   return (
-    <div
-      ref={containerRef}
-      style={{
-        width: '100%',
-        position: 'relative',
-      }}
-    >
+    <Container ref={containerRef}>
       {children}
-    </div>
+    </Container>
   );
 }; 

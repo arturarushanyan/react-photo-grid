@@ -1,6 +1,7 @@
 import React, { useMemo, useRef, useState, useEffect } from 'react';
-import { GridItem, Column } from '../../types';
+import { GridItem, Column as ColumnType } from '../../types';
 import MasonryItem from '../MasonryItem/MasonryItem';
+import { Container, GridContainer, Column } from './MasonryGrid.styles';
 
 interface MasonryGridProps {
   items: GridItem[];
@@ -34,7 +35,7 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
     if (containerWidth === 0) return [];
     
     const columnWidth = (containerWidth - (columnCount - 1) * columnGap) / columnCount;
-    const newColumns: Column[] = Array.from({ length: columnCount }, () => ({
+    const newColumns: ColumnType[] = Array.from({ length: columnCount }, () => ({
       items: [],
       height: 0,
     }));
@@ -57,30 +58,10 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
   }, [items, columnCount, columnGap, rowGap, containerWidth]);
 
   return (
-    <div
-      ref={containerRef}
-      style={{
-        width: '100%',
-        position: 'relative',
-      }}
-    >
-      <div
-        style={{
-          display: 'flex',
-          gap: columnGap,
-          padding: '20px',
-        }}
-      >
+    <Container ref={containerRef}>
+      <GridContainer $columnGap={columnGap}>
         {columns.map((column, columnIndex) => (
-          <div
-            key={columnIndex}
-            style={{
-              flex: 1,
-              display: 'flex',
-              flexDirection: 'column',
-              gap: rowGap,
-            }}
-          >
+          <Column key={columnIndex} $rowGap={rowGap}>
             {column.items.map((item) => (
               <div
                 key={item.id}
@@ -92,9 +73,9 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
                 <MasonryItem src={item.src} photographer={item.photographer} />
               </div>
             ))}
-          </div>
+          </Column>
         ))}
-      </div>
-    </div>
+      </GridContainer>
+    </Container>
   );
 }; 
