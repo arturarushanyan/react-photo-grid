@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from 'react';
-import { Container } from './VirtualizedGrid.styles';
+import { Container, LoadingIndicator, LoadingText } from './VirtualizedGrid.styles';
+import { LoadingSpinner } from '../LoadingSpinner/LoadingSpinner';
 
 interface VirtualizedGridProps {
   onLoadMore?: () => void;
@@ -61,6 +62,12 @@ export const VirtualizedGrid: React.FC<VirtualizedGridProps> = ({
   return (
     <Container ref={containerRef}>
       {children}
+      {loading && (
+        <LoadingIndicator>
+          <LoadingSpinner size="small" />
+          <LoadingText>Loading more photos...</LoadingText>
+        </LoadingIndicator>
+      )}
     </Container>
   );
 }; 

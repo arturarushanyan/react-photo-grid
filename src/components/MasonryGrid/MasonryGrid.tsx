@@ -1,6 +1,7 @@
 import React, { useMemo, useRef, useState, useEffect } from 'react';
 import { GridItem, Column as ColumnType } from '../../types';
 import MasonryItem from '../MasonryItem/MasonryItem';
+import { MasonryItemSkeleton } from '../MasonryItem/MasonryItemSkeleton';
 import { Container, GridContainer, Column } from './MasonryGrid.styles';
 
 interface MasonryGridProps {
@@ -8,13 +9,17 @@ interface MasonryGridProps {
   columnCount: number;
   columnGap: number;
   rowGap: number;
+  loading?: boolean;
 }
+
+const SKELETON_HEIGHTS = [200, 300, 250, 350, 280, 320]; // Various heights for more natural looking skeletons
 
 export const MasonryGrid: React.FC<MasonryGridProps> = ({
   items,
   columnCount,
   columnGap,
   rowGap,
+  loading = false,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerWidth, setContainerWidth] = useState(0);
@@ -57,24 +62,41 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
     return newColumns;
   }, [items, columnCount, columnGap, rowGap, containerWidth]);
 
+  const renderSkeletons = () => {
+    return Array.from({ length: columnCount }).map((_, columnIndex) => (
+      <Column key={`skeleton-${columnIndex}`} $rowGap={rowGap}>
+        {Array.from({ length: 4 }).map((_, itemIndex) => (
+          <MasonryItemSkeleton
+            key={`skeleton-${columnIndex}-${itemIndex}`}
+            height={SKELETON_HEIGHTS[itemIndex % SKELETON_HEIGHTS.length]}
+          />
+        ))}
+      </Column>
+    ));
+  };
+
   return (
     <Container ref={containerRef}>
       <GridContainer $columnGap={columnGap}>
-        {columns.map((column, columnIndex) => (
-          <Column key={columnIndex} $rowGap={rowGap}>
-            {column.items.map((item) => (
-              <div
-                key={item.id}
-                style={{
-                  width: '100%',
-                  height: item.height,
-                }}
-              >
-                <MasonryItem src={item.src} photographer={item.photographer} />
-              </div>
-            ))}
-          </Column>
-        ))}
+        {loading && items.length === 0 ? (
+          renderSkeletons()
+        ) : (
+          columns.map((column, columnIndex) => (
+            <Column key={columnIndex} $rowGap={rowGap}>
+              {column.items.map((item) => (
+                <div
+                  key={item.id}
+                  style={{
+                    width: '100%',
+                    height: item.height,
+                  }}
+                >
+                  <MasonryItem src={item.src} photographer={item.photographer} />
+                </div>
+              ))}
+            </Column>
+          ))
+        )}
       </GridContainer>
     </Container>
   );

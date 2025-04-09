@@ -10,6 +10,14 @@ export const theme = {
     overlay: {
       dark: 'rgba(0, 0, 0, 0.7)',
       gradient: 'linear-gradient(transparent, rgba(0, 0, 0, 0.7))'
+    },
+    skeleton: {
+      base: '#f0f0f0',
+      highlight: '#f8f8f8'
+    },
+    spinner: {
+      border: '#f3f3f3',
+      active: '#007AFF'
     }
   },
   spacing: {
