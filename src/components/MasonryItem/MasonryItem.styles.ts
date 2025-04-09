@@ -7,6 +7,7 @@ export const Container = styled.div`
   overflow: hidden;
   border-radius: ${({ theme }) => theme.borderRadius.md};
   transition: transform ${({ theme }) => theme.transitions.default};
+  cursor: pointer;
 
   &:hover {
     transform: scale(1.02);

@@ -91,7 +91,11 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
                     height: item.height,
                   }}
                 >
-                  <MasonryItem src={item.src} photographer={item.photographer} />
+                  <MasonryItem 
+                    id={item.id}
+                    src={item.src} 
+                    photographer={item.photographer}
+                  />
                 </div>
               ))}
             </Column>
