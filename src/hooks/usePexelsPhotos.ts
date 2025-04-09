@@ -37,6 +37,13 @@ interface UsePexelsPhotosResult {
   loadMore: () => void;
 }
 
+class PhotosLoadError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'PhotosLoadError';
+  }
+}
+
 export const usePexelsPhotos = (): UsePexelsPhotosResult => {
   const [photos, setPhotos] = useState<GridItem[]>([]);
   const [hasMore, setHasMore] = useState(true);
@@ -60,6 +67,10 @@ export const usePexelsPhotos = (): UsePexelsPhotosResult => {
         },
       });
       
+      if (!response) {
+        throw new PhotosLoadError('Failed to load photos from the server');
+      }
+      
       if (response.photos.length === 0) {
         setHasMore(false);
         return;
@@ -76,7 +87,8 @@ export const usePexelsPhotos = (): UsePexelsPhotosResult => {
       
       setPhotos((prev) => [...prev, ...newPhotos]);
     } catch (err) {
-      console.error('Error loading photos:', err);
+      const error = err instanceof Error ? err : new Error('An unknown error occurred');
+      throw new PhotosLoadError(`Error loading photos: ${error.message}`);
     } finally {
       loadingRef.current = false;
     }

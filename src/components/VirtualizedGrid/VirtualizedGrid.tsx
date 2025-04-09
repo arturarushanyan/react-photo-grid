@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import { Container, Sentinel } from './VirtualizedGrid.styles';
+import { Container } from './VirtualizedGrid.styles';
 
 interface VirtualizedGridProps {
   onLoadMore?: () => void;

@@ -1,6 +1,8 @@
 import React from 'react';
 import { VirtualizedMasonryGrid } from '../../components/VirtualizedMasonryGrid/VirtualizedMasonryGrid';
 import { usePexelsPhotos } from '../../hooks/usePexelsPhotos';
+import { MasonryGridErrorBoundary } from '../../components/MasonryGrid/MasonryGridErrorBoundary';
+import { APIErrorBoundary } from '../../components/APIErrorBoundary/APIErrorBoundary';
 
 const Home: React.FC = () => {
   const { photos, loading, error, loadMore } = usePexelsPhotos();
@@ -10,38 +12,19 @@ const Home: React.FC = () => {
   }
 
   return (
-    <div
-      style={{
-        width: '100%',
-        minHeight: '100vh',
-      }}
-    >
-      <VirtualizedMasonryGrid
-        items={photos}
-        columnCount={3}
-        columnGap={16}
-        rowGap={16}
-        windowHeight={window.innerHeight}
-        onLoadMore={loadMore}
-        loading={loading}
-      />
-      {loading && (
-        <div
-          style={{
-            position: 'fixed',
-            bottom: '20px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            padding: '10px 20px',
-            background: 'rgba(0,0,0,0.7)',
-            color: 'white',
-            borderRadius: '20px',
-          }}
-        >
-          Loading more photos...
-        </div>
-      )}
-    </div>
+    <APIErrorBoundary>
+      <MasonryGridErrorBoundary>
+        <VirtualizedMasonryGrid
+          items={photos}
+          columnCount={3}
+          columnGap={16}
+          rowGap={16}
+          windowHeight={window.innerHeight}
+          onLoadMore={loadMore}
+          loading={loading}
+        />
+      </MasonryGridErrorBoundary>
+    </APIErrorBoundary>
   );
 };
 

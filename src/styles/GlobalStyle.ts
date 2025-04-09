@@ -20,4 +20,11 @@ export const GlobalStyle = createGlobalStyle`
     display: block;
     max-width: 100%;
   }
-`; 
+
+  #root {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 2rem;
+    text-align: center;
+  }
+`;
