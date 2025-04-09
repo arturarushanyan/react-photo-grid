@@ -13,7 +13,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       </Header>
       <Main>{children}</Main>
       <Footer>
-        <p>© {new Date().getFullYear()} Photo Grid. Pexels API was used</p>
+        <p>© {new Date().getFullYear()} Photo Grid with Pexels API</p>
       </Footer>
     </LayoutContainer>
   );
