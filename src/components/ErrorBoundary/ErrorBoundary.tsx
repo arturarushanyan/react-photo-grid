@@ -3,6 +3,7 @@ import { ErrorContainer, ErrorTitle, ErrorMessage, RetryButton } from './ErrorBo
 
 interface Props {
   children: ReactNode;
+  variant?: 'default' | 'api';
   fallback?: ReactNode;
 }
 
@@ -32,23 +33,41 @@ export class ErrorBoundary extends Component<Props, State> {
     this.setState({ hasError: false, error: null });
   };
 
-  public render() {
-    if (this.state.hasError) {
-      if (this.props.fallback) {
-        return this.props.fallback;
-      }
+  private renderError() {
+    if (this.props.fallback) {
+      return this.props.fallback;
+    }
 
+    if (this.props.variant === 'api') {
       return (
         <ErrorContainer>
-          <ErrorTitle>Something went wrong</ErrorTitle>
+          <ErrorTitle>Connection Error</ErrorTitle>
           <ErrorMessage>
-            {this.state.error?.message || 'An unexpected error occurred'}
+            Unable to load data from the server. Please check your internet connection.
           </ErrorMessage>
           <RetryButton onClick={this.handleRetry}>
             Try Again
           </RetryButton>
         </ErrorContainer>
       );
+    }
+
+    return (
+      <ErrorContainer>
+        <ErrorTitle>Something went wrong</ErrorTitle>
+        <ErrorMessage>
+          {this.state.error?.message || 'An unexpected error occurred'}
+        </ErrorMessage>
+        <RetryButton onClick={this.handleRetry}>
+          Try Again
+        </RetryButton>
+      </ErrorContainer>
+    );
+  }
+
+  public render() {
+    if (this.state.hasError) {
+      return this.renderError();
     }
 
     return this.props.children;

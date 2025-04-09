@@ -1,30 +1,31 @@
 import React from 'react';
-import { VirtualizedMasonryGrid } from '../../components/VirtualizedMasonryGrid/VirtualizedMasonryGrid';
+import { VirtualizedGrid } from '../../components/VirtualizedGrid/VirtualizedGrid';
+import { MasonryGrid } from '../../components/MasonryGrid/MasonryGrid';
+import { ErrorBoundary } from '../../components/ErrorBoundary/ErrorBoundary';
 import { usePexelsPhotos } from '../../hooks/usePexelsPhotos';
-import { MasonryGridErrorBoundary } from '../../components/MasonryGrid/MasonryGridErrorBoundary';
-import { APIErrorBoundary } from '../../components/APIErrorBoundary/APIErrorBoundary';
+import { HomeContainer } from './Home.styles';
+import { PageIntro } from './components/PageIntro';
 
 const Home: React.FC = () => {
   const { photos, loading, error, loadMore } = usePexelsPhotos();
 
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-
   return (
-    <APIErrorBoundary>
-      <MasonryGridErrorBoundary>
-        <VirtualizedMasonryGrid
-          items={photos}
-          columnCount={3}
-          columnGap={16}
-          rowGap={16}
-          windowHeight={window.innerHeight}
+    <HomeContainer>
+      <PageIntro />
+      <ErrorBoundary variant="api">
+        <VirtualizedGrid
           onLoadMore={loadMore}
           loading={loading}
-        />
-      </MasonryGridErrorBoundary>
-    </APIErrorBoundary>
+        >
+          <MasonryGrid
+            items={photos}
+            columnCount={3}
+            columnGap={16}
+            rowGap={16}
+          />
+        </VirtualizedGrid>
+      </ErrorBoundary>
+    </HomeContainer>
   );
 };
 

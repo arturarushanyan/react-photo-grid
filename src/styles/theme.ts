@@ -18,7 +18,8 @@ export const theme = {
     spinner: {
       border: '#f3f3f3',
       active: '#007AFF'
-    }
+    },
+    border: '#E5E5E5'
   },
   spacing: {
     xs: '4px',
