@@ -3,11 +3,13 @@ import { VirtualizedGrid } from '../../components/VirtualizedGrid/VirtualizedGri
 import { MasonryGrid } from '../../components/MasonryGrid/MasonryGrid';
 import { ErrorBoundary } from '../../components/ErrorBoundary/ErrorBoundary';
 import { usePexelsPhotos } from '../../hooks/usePexelsPhotos';
+import { useResponsiveColumns } from '../../hooks/useResponsiveColumns';
 import { HomeContainer } from './Home.styles';
 import { PageIntro } from './components/PageIntro';
 
 const Home: React.FC = () => {
   const { photos, loading, loadMore } = usePexelsPhotos();
+  const columnCount = useResponsiveColumns();
 
   return (
     <HomeContainer>
@@ -19,7 +21,7 @@ const Home: React.FC = () => {
         >
           <MasonryGrid
             items={photos}
-            columnCount={3}
+            columnCount={columnCount}
             columnGap={16}
             rowGap={16}
           />
