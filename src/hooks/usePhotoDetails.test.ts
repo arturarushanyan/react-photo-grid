@@ -32,7 +32,7 @@ describe('usePhotoDetails', () => {
   });
 
   it('returns loading state initially', () => {
-    (useApi as vi.Mock).mockReturnValue({
+    (useApi as any).mockReturnValue({
       fetchData: vi.fn(),
       loading: true,
       error: null,
@@ -47,7 +47,7 @@ describe('usePhotoDetails', () => {
 
   it('returns photo data when fetch is successful', async () => {
     const mockFetchData = vi.fn().mockResolvedValue(mockPhotoData);
-    (useApi as vi.Mock).mockReturnValue({
+    (useApi as any).mockReturnValue({
       fetchData: mockFetchData,
       loading: false,
       error: null,
@@ -64,7 +64,7 @@ describe('usePhotoDetails', () => {
 
   it('handles error state', async () => {
     const mockError = 'Failed to fetch';
-    (useApi as vi.Mock).mockReturnValue({
+    (useApi as any).mockReturnValue({
       fetchData: vi.fn(),
       loading: false,
       error: mockError,
@@ -79,7 +79,7 @@ describe('usePhotoDetails', () => {
 
   it('does not fetch when id is undefined', () => {
     const mockFetchData = vi.fn();
-    (useApi as vi.Mock).mockReturnValue({
+    (useApi as any).mockReturnValue({
       fetchData: mockFetchData,
       loading: false,
       error: null,

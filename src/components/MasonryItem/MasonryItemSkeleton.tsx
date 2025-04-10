@@ -23,12 +23,10 @@ interface MasonryItemSkeletonProps {
 }
 
 export const MasonryItemSkeleton: React.FC<MasonryItemSkeletonProps> = ({ height }) => (
-  <div data-testid="loading-skeleton" style={{ height }}>
-    <SkeletonContainer>
-      <PhotoSkeleton $height={height} />
-      <TextContainer>
-        <TextSkeleton />
-      </TextContainer>
-    </SkeletonContainer>
-  </div>
+  <SkeletonContainer>
+    <PhotoSkeleton $height={height} />
+    <TextContainer>
+      <TextSkeleton />
+    </TextContainer>
+  </SkeletonContainer>
 ); 

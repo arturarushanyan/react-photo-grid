@@ -1,6 +1,5 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { ErrorBoundary } from '../../components/ErrorBoundary/ErrorBoundary';
 import { usePhotoDetails } from '../../hooks/usePhotoDetails';
 import {
   Container,

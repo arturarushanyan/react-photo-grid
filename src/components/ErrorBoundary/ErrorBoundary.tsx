@@ -1,4 +1,4 @@
-import React, { Component, ErrorInfo, ReactNode } from 'react';
+import { Component, ErrorInfo, ReactNode } from 'react';
 import { ErrorContainer, ErrorTitle, ErrorMessage, RetryButton } from './ErrorBoundary.styles';
 
 interface Props {

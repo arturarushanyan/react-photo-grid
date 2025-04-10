@@ -7,7 +7,7 @@ import { HomeContainer } from './Home.styles';
 import { PageIntro } from './components/PageIntro';
 
 const Home: React.FC = () => {
-  const { photos, loading, error, loadMore } = usePexelsPhotos();
+  const { photos, loading, loadMore } = usePexelsPhotos();
 
   return (
     <HomeContainer>

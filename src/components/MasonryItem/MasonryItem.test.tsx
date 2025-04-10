@@ -1,7 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
-import { describe, it, expect } from 'vitest';
 import MasonryItem from './MasonryItem';
 import { theme } from '../../styles/theme';
 

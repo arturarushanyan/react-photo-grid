@@ -47,7 +47,7 @@ describe('ImageDetails', () => {
   });
 
   it('renders loading state', () => {
-    (usePhotoDetails as vi.Mock).mockReturnValue({
+    (usePhotoDetails as any).mockReturnValue({
       photo: null,
       loading: true,
       error: null,
@@ -58,7 +58,7 @@ describe('ImageDetails', () => {
   });
 
   it('renders error state', () => {
-    (usePhotoDetails as vi.Mock).mockReturnValue({
+    (usePhotoDetails as any).mockReturnValue({
       photo: null,
       loading: false,
       error: 'Failed to load',
@@ -69,7 +69,7 @@ describe('ImageDetails', () => {
   });
 
   it('renders photo details', () => {
-    (usePhotoDetails as vi.Mock).mockReturnValue({
+    (usePhotoDetails as any).mockReturnValue({
       photo: mockPhotoDetails,
       loading: false,
       error: null,
@@ -84,7 +84,7 @@ describe('ImageDetails', () => {
   });
 
   it('renders back button that links to home', () => {
-    (usePhotoDetails as vi.Mock).mockReturnValue({
+    (usePhotoDetails as any).mockReturnValue({
       photo: mockPhotoDetails,
       loading: false,
       error: null,
