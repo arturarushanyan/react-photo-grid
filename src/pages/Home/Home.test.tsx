@@ -1,10 +1,11 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { vi, describe, it, expect, beforeEach, Mock } from 'vitest';
 import { ThemeProvider } from 'styled-components';
 import { BrowserRouter } from 'react-router-dom';
 import Home from './index';
 import { usePexelsPhotos } from '../../hooks/usePexelsPhotos';
 import { theme } from '../../styles/theme';
+import { config } from '../../config';
 
 vi.mock('../../hooks/usePexelsPhotos');
 
@@ -42,7 +43,7 @@ describe('Home', () => {
     vi.clearAllMocks();
   });
 
-  it('should render photos grid', () => {
+  it('should render photos grid', async () => {
     (usePexelsPhotos as Mock).mockReturnValue({
       photos: mockPhotos,
       loading: false,
@@ -53,12 +54,14 @@ describe('Home', () => {
 
     renderWithProviders(<Home />);
 
-    mockPhotos.forEach(photo => {
-      expect(screen.getByAltText(`Photo by ${photo.photographer}`)).toBeInTheDocument();
+    await waitFor(() => {
+      mockPhotos.forEach(photo => {
+        expect(screen.getByAltText(`Photo by ${photo.photographer}`)).toBeInTheDocument();
+      });
     });
   });
 
-  it('should handle loading state', () => {
+  it('should handle loading state', async () => {
     (usePexelsPhotos as Mock).mockReturnValue({
       photos: [],
       loading: true,
@@ -69,12 +72,12 @@ describe('Home', () => {
 
     renderWithProviders(<Home />);
 
-    // Check for loading indicators or skeletons
-    // This will depend on your actual implementation
-    expect(screen.getByTestId('loading-skeleton')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getAllByTestId('loading-skeleton')).toHaveLength(config.grid.defaultPageSize);
+    });
   });
 
-  it('should handle error state', () => {
+  it('should handle error state', async () => {
     const mockError = 'Failed to load photos';
     (usePexelsPhotos as Mock).mockReturnValue({
       photos: [],
@@ -86,10 +89,12 @@ describe('Home', () => {
 
     renderWithProviders(<Home />);
 
-    expect(screen.getByText(mockError)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText(mockError)).toBeInTheDocument();
+    });
   });
 
-  it('should handle infinite scroll', () => {
+  it('should handle infinite scroll', async () => {
     const mockLoadMore = vi.fn();
     (usePexelsPhotos as Mock).mockReturnValue({
       photos: mockPhotos,
@@ -99,9 +104,22 @@ describe('Home', () => {
       loadMore: mockLoadMore
     });
 
+    const mockIntersectionObserver = vi.fn();
+    mockIntersectionObserver.mockReturnValue({
+      observe: () => null,
+      unobserve: () => null,
+      disconnect: () => null
+    });
+    window.IntersectionObserver = mockIntersectionObserver;
+
     renderWithProviders(<Home />);
 
-    // You might need to mock IntersectionObserver and trigger it
-    // This will depend on your implementation of infinite scroll
+    // Simulate intersection observer callback
+    const [observerCallback] = mockIntersectionObserver.mock.calls[0];
+    observerCallback([{ isIntersecting: true }]);
+
+    await waitFor(() => {
+      expect(mockLoadMore).toHaveBeenCalled();
+    });
   });
 }); 

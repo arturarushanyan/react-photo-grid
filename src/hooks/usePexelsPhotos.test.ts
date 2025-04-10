@@ -61,15 +61,20 @@ describe('usePexelsPhotos', () => {
       error: null
     });
 
-    renderHook(() => usePexelsPhotos());
+    const { result } = renderHook(() => usePexelsPhotos());
+
+    // Wait for the initial effect to run
+    await act(async () => {
+      await Promise.resolve();
+    });
 
     expect(mockFetchData).toHaveBeenCalledWith(
-      expect.stringContaining(config.api.pexels.baseUrl),
-      expect.objectContaining({
+      `${config.api.pexels.baseUrl}${config.api.pexels.endpoints.curated}?page=1&per_page=${config.grid.defaultPageSize}`,
+      {
         headers: {
           Authorization: config.api.pexels.apiKey
         }
-      })
+      }
     );
   });
 
@@ -83,6 +88,7 @@ describe('usePexelsPhotos', () => {
 
     const { result } = renderHook(() => usePexelsPhotos());
 
+    // Wait for the effect and state updates
     await act(async () => {
       await Promise.resolve();
     });
@@ -99,7 +105,13 @@ describe('usePexelsPhotos', () => {
   });
 
   it('should handle load more correctly', async () => {
-    const mockFetchData = vi.fn().mockResolvedValue(mockPhotosResponse);
+    const mockFetchData = vi.fn()
+      .mockResolvedValueOnce(mockPhotosResponse)
+      .mockResolvedValueOnce({
+        ...mockPhotosResponse,
+        page: 2
+      });
+
     (useApi as Mock).mockReturnValue({
       fetchData: mockFetchData,
       loading: false,
@@ -108,35 +120,50 @@ describe('usePexelsPhotos', () => {
 
     const { result } = renderHook(() => usePexelsPhotos());
 
+    // Wait for initial load
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    // Trigger load more
     await act(async () => {
       result.current.loadMore();
       await Promise.resolve();
     });
 
     expect(mockFetchData).toHaveBeenCalledTimes(2);
+    expect(mockFetchData).toHaveBeenLastCalledWith(
+      expect.stringContaining('page=2'),
+      expect.any(Object)
+    );
   });
 
-  it('should handle loading state', () => {
+  it('should handle loading state', async () => {
+    const mockFetchData = vi.fn().mockImplementation(() => new Promise(() => {})); // Never resolves
     (useApi as Mock).mockReturnValue({
-      fetchData: vi.fn(),
+      fetchData: mockFetchData,
       loading: true,
       error: null
     });
 
     const { result } = renderHook(() => usePexelsPhotos());
-
     expect(result.current.loading).toBe(true);
   });
 
-  it('should handle error state', () => {
+  it('should handle error state', async () => {
     const mockError = 'Failed to fetch';
+    const mockFetchData = vi.fn().mockRejectedValue(new Error(mockError));
     (useApi as Mock).mockReturnValue({
-      fetchData: vi.fn(),
+      fetchData: mockFetchData,
       loading: false,
       error: mockError
     });
 
     const { result } = renderHook(() => usePexelsPhotos());
+
+    await act(async () => {
+      await Promise.resolve();
+    });
 
     expect(result.current.error).toBe(mockError);
   });
