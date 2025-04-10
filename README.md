@@ -228,32 +228,6 @@ VITE_PEXELS_API_URL  # Pexels API base URL (https://api.pexels.com/v1)
 - Testing Library React 16.3.0
 - ESLint 9.21.0
 
-## Browser Support
-
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
-
-## Future Improvements
-
-1. Add search functionality
-2. Implement image caching
-3. Add photo categories
-4. Improve test coverage
-5. Add E2E tests with Cypress
-6. Add photo filtering options
-7. Implement user collections
-8. Add sharing functionality
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
 ## License
 
 This project is licensed under the MIT License.
