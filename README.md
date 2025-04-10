@@ -2,6 +2,46 @@
 
 A responsive photo gallery application built with React and the Pexels API, featuring a masonry grid layout for displaying high-quality images.
 
+Alright, here I'll briefly explain what I did overall.
+First of all, to make reviewer's life a bit easier, I've included the .env file in the repo along side with my api key. Of course it should not be done n a real project.
+
+Now, the implementation. 
+For virtualized fuctionality I've decided to go with the Intersection Observer. Just because it was relatively faster to implement. I know, as you'll see, it's not a 'true' virtualization as the images does not remove from the dom when not visible. Unfortunaltely, I didn't had time to implement this.
+Some other implementation variant was to use the method descibed here [text](https://dev.to/adamklein/build-your-own-virtual-scroll-part-i-11ib)
+The problem with that is that for dynamic height this approach had a lot of bugs to fix. Thus, I went with another.
+
+As suggested, I used mainly Lighthouse to see what's going on with the performance.
+I'll mention right away, there are still a lot of stuff that cou;d be improved.
+Mainly I would've focused more on image optimization. For example using webp format.
+
+In any case, here are some key things to mention overall:
+
+- Used Intersection Observer API instead of scroll events to reduce performance overhead
+- Implemented through usePexelsPhotos hook with a reference-based loading state to prevent    unnecessary re-renders
+- Batched state updates when loading new photos to minimize render cycles
+- Utilized the Pexels API's different image sizes (medium size for grid view)
+- Implemented skeleton loading states using MasonryItemSkeleton component to improve perceived performance
+- Used native lazy loading with loading="lazy" attribute on images
+- Custom useApi hook manages API state efficiently with proper error boundaries
+- Used useRef for loading states to prevent unnecessary re-renders
+- Implemented proper cleanup in hooks to prevent memory leaks
+- Grid items are properly keyed for efficient DOM updates
+- Used useCallback for event handlers and callbacks that are passed as props
+- Implemented proper dependency arrays in useEffect hooks
+- Using Vite as the build tool for faster development and optimized production builds
+- Proper code splitting through React Router
+- Vite's built-in optimizations
+
+IMPORTANT NOTE: Please use production build for checking app's performance.
+
+Other things to mention:
+
+There are still some issues to solve for which unfortunately I didn't have time. 
+Some of the issues include:
+
+- Remove 'any' types
+- Some tests are failing so need to fix those
+
 ## Features
 
 - Responsive masonry grid layout
@@ -59,6 +99,14 @@ The application will be available at `http://localhost:5173`
 npm run build
 # or
 yarn build
+```
+
+then run:
+
+```bash
+npm run preview
+# or
+yarn preview
 ```
 
 ### Running Tests
