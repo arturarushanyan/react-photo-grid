@@ -39,8 +39,11 @@ Other things to mention:
 There are still some issues to solve for which unfortunately I didn't have time. 
 Some of the issues include:
 
-- Remove 'any' types
+- Remove 'any' types. Just put those in some places for not spending too much time on fixing errors.
 - Some tests are failing so need to fix those
+- Some styles could be improved
+- There will be minor things here and there that might make sense to move to a separate file
+- Might have frgotten to delete some unused stuff
 
 ## Features
 
